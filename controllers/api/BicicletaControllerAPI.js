@@ -1,4 +1,4 @@
-let Bicicleta = require("../../models/Bicicleta");
+let Bicicleta = require("../../models/bicicleta");
 
 exports.bicicleta_list = function (req, res) {
     res.status(200).json({
@@ -19,5 +19,11 @@ exports.bicicleta_create = function (req, res) {
 
 exports.bicicleta_delete = function (req, res) {
     Bicicleta.removeById(req.body.id);
+    res.status(204).send();
+};
+
+exports.bicicleta_update = function (req, res) {
+    let bici = new Bicicleta(req.body.id, req.body.color, req.body.modelo, req.body.ubicacion);
+    Bicicleta.update(bici);
     res.status(204).send();
 };
