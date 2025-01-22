@@ -3,6 +3,8 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var swaggerJsdoc = require("swagger-jsdoc");
+var swaggerUi = require("swagger-ui-express");
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -20,11 +22,48 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+const options = {
+  definition: {
+    openapi: "3.1.0",
+    info: {
+      title: "API Bicicletas",
+      version: "0.1.0",
+      description:
+        "Una API para administrar bicicletas",
+      license: {
+        name: "MIT",
+        url: "https://spdx.org/licenses/MIT.html",
+      },
+      contact: {
+        name: "LogRocket",
+        url: "https://logrocket.com",
+        email: "info@email.com",
+      },
+    },
+    servers: [
+      {
+        url: "http://localhost:3000",
+      },
+    ],
+  },
+  apis: ["./models/*.js"],
+};
+
+const specs = swaggerJsdoc(options);
+
+
 //If there are several versions of the API, /api/v1/bicicletas is usually used
 app.use('/api/bicicletas', bicicletasAPIRouter);
-
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(specs, {
+    explorer: true,
+    customCssUrl: "https://cdn.jsdelivr.net/npm/swagger-ui-themes@3.0.0/themes/3.x/theme-newspaper.css",
+  })
+);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
