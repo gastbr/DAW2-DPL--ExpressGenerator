@@ -15,7 +15,7 @@ var app = express();
 
 app.use(cors(
   {
-    origin: "https://daw2-dpl-expressgenerator.onrender.com/"
+    origin: "http://localhost:3000"
   }
 ));
 
